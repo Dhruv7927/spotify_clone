@@ -23,21 +23,8 @@ const __dirname = path.resolve();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors(
-    {
-        origin: process.env.CLIENT_URL || "http://localhost:3000", 
-        credentials: true, // Allow cookies to be sent
-    }
-));
-app.options('*', cors());
+app.use(cors())
 
-
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-    })
-}
 
 const httpServer = createServer(app);
 inititalizeSocket(httpServer);
