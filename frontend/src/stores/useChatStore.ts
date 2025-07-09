@@ -22,7 +22,7 @@ interface ChatStore {
     setSelectedUser: (user: User | null) => void;
 }
 
-const baseURL = import.meta.env.MODE === "development" ? "https://spotify-backend-pvtu.onrender.com" : "/";
+const baseURL = import.meta.env.MODE === "development" ? "https://spotify-backend-pvtu.onrender.com" : "https://spotify-backend-pvtu.onrender.com";
 
 const socket = io(baseURL, {
     autoConnect: false, //only connect if user is authenticated
