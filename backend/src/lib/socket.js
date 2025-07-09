@@ -1,15 +1,15 @@
-import {Server} from "socket.io";
-import {Message} from "../models/message.model.js";
+import { Server } from "socket.io";
+import { Message } from "../models/message.model.js";
 
 export const inititalizeSocket = (server) => {
     const io = new Server(server, {
-        cors:{
-            origin: "http://localhost:3000",
+        cors: {
+            origin: "https://spotify-clone-3vtf.vercel.app",
             credentials: true,
         }
     });
 
-    const userSockets =new Map(); //{ userId: socketId }
+    const userSockets = new Map(); //{ userId: socketId }
     const userActivities = new Map(); // { userId: { activity } }
 
     io.on("connection", (socket) => {
@@ -28,12 +28,12 @@ export const inititalizeSocket = (server) => {
         socket.on("update_activity", (userId, activity) => {
             console.log("activity updated", userId, activity);
             userActivities.set(userId, activity);
-            io.emit("activity_updated", {userId, activity});
+            io.emit("activity_updated", { userId, activity });
         });
 
         socket.on("send_message", async (data) => {
             try {
-                const {senderId, receiverId, content} = data;
+                const { senderId, receiverId, content } = data;
 
                 const message = await Message.create({
                     senderId,
@@ -50,13 +50,13 @@ export const inititalizeSocket = (server) => {
                 socket.emit("message_sent", message);
             } catch (error) {
                 console.error("Error sending message:", error);
-                socket.emit("message_error", error.message);    
+                socket.emit("message_error", error.message);
             }
         });
 
         socket.on("disconnect", () => {
             let disconnectedUserId;
-            for(const [userId, socketId] of userSockets.entries()) {
+            for (const [userId, socketId] of userSockets.entries()) {
                 //find disconnected user
                 if (socketId === socket.id) {
                     disconnectedUserId = userId;
